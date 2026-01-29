@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Love</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root { --red: #ff3e3e; --glass: rgba(255, 255, 255, 0.05); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #05050a; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
+        /* الخلفية المتحركة */
+        body::before { content: ''; position: absolute; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 62, 62, 0.05) 0%, transparent 60%); animation: pulse 10s infinite; z-index: -1; pointer-events: none; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        .glass-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 40px; 
+            padding: 40px 30px; 
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* تنسيق علامة اللانهاية */
+        .infinity-symbol {
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff3e3e, #ff0055);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(255, 62, 62, 0.6));
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* تنسيق العداد */
+        .stats-container { display: flex; justify-content: center; width: 100%; gap: 10px; margin-bottom: 30px; }
+        .stat-box { 
+            background: rgba(255, 62, 62, 0.1); 
+            padding: 15px 10px; 
+            border-radius: 18px; 
+            flex: 1; 
+            border: 1px solid rgba(255,62,62,0.2); 
+            transition: 0.3s;
+        }
+        .stat-box:hover { transform: translateY(-5px); background: rgba(255, 62, 62, 0.2); }
+        .stat-num { font-size: 1.5rem; font-weight: bold; display: block; color: white; text-shadow: 0 0 10px var(--red); margin-bottom: 5px;}
+        .stat-label { font-size: 0.8rem; color: #ccc; }
+
+        /* زر الـ QR */
+        .qr-btn {
+            background: transparent;
+            border: 1px solid var(--red);
+            color: var(--red);
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .qr-btn:hover { background: var(--red); color: white; box-shadow: 0 0 20px var(--red); }
+
+        /* حاوية الـ QR */
+        #qrContainer {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            display: none; /* مخفي افتراضياً */
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card">
+        <div class="infinity-symbol">∞</div>
+
+        <div class="stats-container">
+            <div class="stat-box"><span id="d" class="stat-num">0</span><span class="stat-label">يوم</span></div>
+            <div class="stat-box"><span id="h" class="stat-num">0</span><span class="stat-label">ساعة</span></div>
+            <div class="stat-box"><span id="m" class="stat-num">0</span><span class="stat-label">دقيقة</span></div>
+            <div class="stat-box"><span id="s" class="stat-num">0</span><span class="stat-label">ثانية</span></div>
+        </div>
+
+        <button class="qr-btn" onclick="toggleQR()">مشاركة العداد (QR) 📷</button>
+        
+        <div id="qrContainer">
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. تشغيل العداد
+        function startCounter() {
+            // ⚠️ تأكد من تعديل التاريخ هنا
+            const start = new Date("2025-01-08T00:00:00").getTime();
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = now - start;
+                
+                document.getElementById("d").innerText = Math.floor(diff / 86400000);
+                document.getElementById("h").innerText = Math.floor((diff % 86400000) / 3600000);
+                document.getElementById("m").innerText = Math.floor((diff % 3600000) / 60000);
+                document.getElementById("s").innerText = Math.floor((diff % 60000) / 1000);
+            }, 1000);
+        }
+        startCounter();
+
+        // 2. كود توليد الـ QR Code
+        let qrGenerated = false;
+        function toggleQR() {
+            const container = document.getElementById('qrContainer');
+            
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+            } else {
+                container.style.display = 'block';
+                if (!qrGenerated) {
+                    // يقوم بإنشاء QR لرابط الصفحة الحالية
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: window.location.href, 
+                        width: 128,
+                        height: 128,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.H
+                    });
+                    qrGenerated = true;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
