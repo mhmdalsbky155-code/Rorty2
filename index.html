@@ -24,10 +24,21 @@
         .heart-letter-r { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -75%); color: black; font-size: 3rem; font-weight: 900; font-family: 'Cairo', sans-serif; }
         
         .title { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--pure-red); margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
-        .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
-        .current-lyric { font-size: 1.3rem; color: var(--pure-red); font-weight: 700; text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); transition: all 0.4s ease; opacity: 0; transform: translateY(15px); white-space: pre-line; }
+        
+        /* التعديل: نعومة الكتابة والقلوب الصغيرة */
+        .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .current-lyric { 
+            font-size: 1.3rem; color: var(--pure-red); font-weight: 700; 
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); 
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s ease; 
+            opacity: 0; transform: translateY(10px); white-space: pre-line; z-index: 5;
+        }
         .current-lyric.visible { opacity: 1; transform: translateY(0); }
         
+        /* قلوب صغيرة خلف الكلام */
+        .mini-heart { position: absolute; color: var(--pure-red); font-size: 14px; pointer-events: none; animation: flyUp 2s ease-out forwards; opacity: 0.6; }
+        @keyframes flyUp { 0% { transform: translate(0, 0) scale(1); opacity: 0.6; } 100% { transform: translate(var(--x), var(--y)) scale(0.5); opacity: 0; } }
+
         .timer-container { display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; }
         .time-box { background: var(--box-bg); padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
         .t-num { font-size: 1.6rem; font-weight: 800; color: var(--pure-red); }
@@ -52,7 +63,7 @@
     <div class="main-card" id="mainCard">
         <div class="main-heart-wrapper"><div class="main-heart">♥️</div><div class="heart-letter-r">R</div></div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
-        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
+        <div class="lyrics-box" id="lyricsContainer"><div id="lyricText" class="current-lyric"></div></div>
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
@@ -88,6 +99,19 @@
                 playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
                 events: { 'onStateChange': onPlayerStateChange }
             });
+        }
+
+        function createMiniHeart() {
+            const container = document.getElementById('lyricsContainer');
+            for(let i=0; i<3; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '♥️'; heart.className = 'mini-heart';
+                heart.style.left = (50 + (Math.random()*40 - 20)) + '%';
+                heart.style.setProperty('--x', (Math.random()*60 - 30) + 'px');
+                heart.style.setProperty('--y', (Math.random()*-80 - 20) + 'px');
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 2000);
+            }
         }
 
         function handleStart() {
@@ -128,7 +152,11 @@
             const lyricDiv = document.getElementById('lyricText');
             if (lyricDiv && lyricDiv.innerText !== currentText && currentText !== "") {
                 lyricDiv.classList.remove('visible');
-                setTimeout(() => { lyricDiv.innerText = currentText; lyricDiv.classList.add('visible'); }, 50);
+                setTimeout(() => { 
+                    lyricDiv.innerText = currentText; 
+                    lyricDiv.classList.add('visible'); 
+                    createMiniHeart(); // إطلاق القلوب مع كل جملة
+                }, 400); // نعومة أكثر في الانتقال
             }
         }
 
