@@ -3,116 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Valentine's</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
+    <title>My Love</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root {
-            --pink: #ff0055; /* لون الكارت الرئيسي زي الفيديو */
-            --red-start: #ff0033; /* لون قلب البداية الأحمر */
-            --bg: #000000; /* خلفية سوداء تماماً */
+        :root { 
+            --pure-red: #ff0000; /* أحمر صريح */
+            --glow-red: rgba(255, 0, 0, 0.6);
+            --bg-black: #000000;
+            --box-bg: #1a1a1a; 
         }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-
-        /* تم إزالة الخلفية المنقطة لتكون سوداء تماماً */
-
-        /* --- شاشة البداية --- */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-black); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
+        /* شاشة البداية */
         #startOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); /* سوداء تماماً */
-            z-index: 10000;
+            background: #000; z-index: 10000;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
             transition: opacity 0.8s ease;
         }
-
-        /* حاوية القلب - إضافة تأثير الموجة الحمراء */
-        .start-heart-container {
-            position: relative; width: 140px; height: 140px;
-            display: flex; justify-content: center; align-items: center;
-            margin-bottom: 30px;
-            /* دمج انيميشن النبض مع انيميشن الوهج الأحمر */
-            animation: beat 1.5s infinite ease-in-out, redWave 2s infinite ease-in-out;
-        }
         
-        /* رسمة القلب (SVG) - لون أحمر */
-        .svg-heart {
-            fill: var(--red-start);
-            width: 100%; height: 100%;
-            /* وهج أساسي */
-            filter: drop-shadow(0 0 15px rgba(255, 0, 51, 0.7));
+        /* القلب في البداية */
+        .start-heart-container {
+            position: relative; width: 120px; height: 120px;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 25px;
+            animation: beat 1.5s infinite;
         }
-
-        /* تأثير الموجة الحمراء الخفيفة */
-        @keyframes redWave {
-            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 0, 51, 0.5)); scale: 1; }
-            50% { filter: drop-shadow(0 0 40px rgba(255, 0, 51, 0.8)); scale: 1.02; }
-        }
-
-        /* النص جوه القلب */
-        .heart-inner {
-            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center; color: black;
-            line-height: 1;
-        }
+        .svg-heart { fill: var(--pure-red); width: 100%; height: 100%; filter: drop-shadow(0 0 20px var(--pure-red)); }
+        .heart-inner { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: black; line-height: 1; }
         .infinity-symbol { font-size: 3rem; font-weight: bold; margin-bottom: -5px; }
         .rorty-text { font-size: 1rem; font-weight: 800; letter-spacing: 1px; }
 
-        /* جملة البداية مع إضاءة بسيطة */
         .phrase-msg {
             color: #fff; font-size: 1.5rem; font-weight: 700;
-            /* إضاءة بيضاء محمرة بسيطة */
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 0, 51, 0.4);
+            text-shadow: 0 0 10px var(--pure-red); /* إضاءة حمراء للكلام */
             margin-top: 20px;
+            animation: floatText 3s ease-in-out infinite;
         }
+        @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-
-        /* --- الكارت الرئيسي (زي ما هو) --- */
-        .main-card {
-            width: 100%; max-width: 400px; text-align: center;
+        /* --- الكارت الرئيسي --- */
+        .main-card { 
+            background: transparent; 
+            width: 90%; max-width: 400px; text-align: center; 
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; transform: scale(0.95); transition: all 1s ease;
         }
 
-        .main-heart-icon {
-            font-size: 5rem; color: var(--pink);
-            filter: drop-shadow(0 0 30px var(--pink));
-            animation: beat 2s infinite; margin-bottom: 10px; cursor: pointer;
+        /* حاوية القلب بحرف R */
+        .main-heart-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+            cursor: pointer;
+            animation: beat 2s infinite ease-in-out;
+        }
+
+        /* القلب الأحمر المتوهج */
+        .main-heart {
+            font-size: 6.5rem; 
+            color: var(--pure-red); /* لون أحمر */
+            filter: drop-shadow(0 0 40px var(--pure-red));
+            line-height: 1;
+        }
+
+        /* حرف R الأسود */
+        .heart-letter-r {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -55%); /* تظبيط السنتر */
+            color: black;
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'Cairo', sans-serif;
+            pointer-events: none; /* عشان الضغط يروح للقلب */
         }
 
         .title {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.8rem; line-height: 1.2;
-            background: linear-gradient(to right, #ff0055, #ff5e78);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            font-family: 'Cairo', sans-serif; font-size: 2rem; font-weight: 700;
+            color: var(--pure-red); /* العنوان أحمر */
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
         }
 
+        /* كلمات الأغنية (لون أحمر) */
         .lyrics-box {
-            min-height: 60px; margin: 20px 0; width: 100%;
+            min-height: 100px; margin: 20px 0; width: 100%;
             display: flex; align-items: center; justify-content: center;
         }
         .current-lyric {
-            font-size: 1.4rem; color: #eee; font-weight: 700;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            transition: all 0.3s ease; opacity: 0; transform: translateY(10px);
+            font-size: 1.4rem; 
+            color: var(--pure-red); /* الكلام أحمر */
+            font-weight: 700; line-height: 1.6;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* توهج أحمر */
+            transition: all 0.4s ease; opacity: 0; transform: translateY(15px); filter: blur(4px);
         }
-        .current-lyric.visible { opacity: 1; transform: translateY(0); }
+        .current-lyric.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-        .timer-container {
-            display: flex; justify-content: center; gap: 10px; width: 100%; margin-top: 20px; direction: ltr;
+        /* العداد */
+        .timer-container { 
+            display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; 
         }
-        .time-box {
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid #333; border-radius: 15px;
-            width: 70px; padding: 10px 0;
-            display: flex; flex-direction: column; align-items: center;
+        .time-box { 
+            background: var(--box-bg);
+            padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .t-num { font-size: 1.4rem; font-weight: bold; color: #ff5e78; margin-bottom: 2px; }
-        .t-label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; font-family: sans-serif; }
+        .t-num { 
+            font-size: 1.6rem; font-weight: 800; 
+            color: var(--pure-red); /* الأرقام حمراء */
+            margin-bottom: 5px; text-shadow: 0 0 5px var(--glow-red); 
+        } 
+        .t-label { font-size: 0.75rem; color: #ccc; font-family: 'Cairo', sans-serif; font-weight: 600; }
 
-        #secretQR { display: none; margin-top: 20px; background: white; padding: 10px; border-radius: 10px; animation: fadeIn 0.5s; }
+        #secretQR { display: none; margin-top: 30px; background: white; padding: 15px; border-radius: 15px; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
@@ -131,35 +136,41 @@
             </div>
         </div>
         <div class="phrase-msg">المُحب دائمـاً .. يجـد طـريقـاً</div>
+        <div style="margin-top: 15px; color: #555; font-size: 0.9rem;">(اضغط للفتح)</div>
     </div>
 
     <div id="youtube-player"></div>
 
     <div class="main-card" id="mainCard">
-        <div class="main-heart-icon" ondblclick="showSecretQR()">❤️</div>
+        <div class="main-heart-wrapper" ondblclick="showSecretQR()">
+            <div class="main-heart">❤️</div>
+            <div class="heart-letter-r">R</div>
+        </div>
         
-        <div class="title">Happy Valentine's<br>Day My Love</div>
+        <div class="title">Happy Valentine's</div>
 
         <div class="lyrics-box">
             <div id="lyricText" class="current-lyric"></div>
         </div>
 
         <div class="timer-container">
-            <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">DAYS</span></div>
-            <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">HRS</span></div>
-            <div class="time-box"><span id="m" class="t-num">0</span><span class="t-label">MIN</span></div>
-            <div class="time-box"><span id="s" class="t-num">0</span><span class="t-label">SEC</span></div>
+            <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
+            <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
+            <div class="time-box"><span id="m" class="t-num">0</span><span class="t-label">دقيقة</span></div>
+            <div class="time-box"><span id="s" class="t-num">0</span><span class="t-label">ثانية</span></div>
         </div>
 
         <div id="secretQR"></div>
     </div>
 
     <script>
-        // --- إعدادات الأغنية (تم ضبط التوقيت بدقة) ---
+        // --- إعدادات الأغنية (عيد الحب - حقروص) ---
+        // البداية: 13.5 ثانية (بعيد الحب)
+        // النهاية: 58.0 ثانية (بعد مريت من جنبي فوراً)
         const startSec = 13.5; 
         const endSec = 58.0; 
 
-        // --- كلمات الأغنية (متزامنة بالمللي) ---
+        // --- الكلمات (شاملة المقطع كله) ---
         const lyrics = [
             { time: 13.5, text: "بعيد الحب أبكتب لك .." },
             { time: 16.5, text: "واسمعك الذي فاتك .." },
@@ -172,7 +183,7 @@
             { time: 44.0, text: "وكنت اتعمد النظرة .." },
             { time: 48.0, text: "عشان احظى بنظراتك .." },
             { time: 52.0, text: "واتشقق من الفرحة .." },
-            { time: 55.5, text: "اذا مريت من جنبي .." }
+            { time: 55.5, text: "اذا مريت من جنبيييي .." }
         ];
 
         var player;
@@ -191,6 +202,7 @@
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
             
+            // Loop: يرجع للبداية عند الثانية 58
             if (ct >= endSec) player.seekTo(startSec);
 
             let currentText = "";
@@ -220,7 +232,12 @@
             card.style.opacity = '1'; 
             card.style.transform = 'scale(1)';
             
-            if(player) { player.seekTo(startSec); player.playVideo(); player.unMute(); player.setVolume(100); }
+            if(player) { 
+                player.seekTo(startSec); 
+                player.playVideo(); 
+                player.unMute(); 
+                player.setVolume(100); 
+            }
         }
 
         // تاريخ البداية: 8 يناير 2025
