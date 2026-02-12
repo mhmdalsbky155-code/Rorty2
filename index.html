@@ -4,82 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@400;700&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --main-color: #ff0a54; --bg-color: #050505; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-color); color: white; font-family: 'Cairo', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-color); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
         /* الخلفية والنجوم */
         body::before { content: ''; position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at center, #2b0c15 0%, #000 100%); z-index: -2; }
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-image: radial-gradient(white 1px, transparent 1px); background-size: 50px 50px; opacity: 0.3; }
 
-        /* --- شاشة البداية الجديدة --- */
+        /* --- شاشة البداية --- */
         #startOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 10000;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
-            transition: opacity 0.8s ease;
+            transition: opacity 1s ease;
         }
-        /* تصميم القلب الأحمر في البداية */
+        
+        /* القلب في شاشة البداية */
         .start-heart-container {
             position: relative; width: 120px; height: 120px; background-color: var(--main-color);
-            transform: rotate(45deg); margin-top: -50px; margin-bottom: 30px;
-            box-shadow: 0 0 40px var(--main-color);
+            transform: rotate(45deg); margin-top: -50px; margin-bottom: 40px;
+            box-shadow: 0 0 50px var(--main-color);
             display: flex; justify-content: center; align-items: center;
-            animation: beat 1.5s infinite;
+            animation: beat 2s infinite ease-in-out;
         }
         .start-heart-container::before, .start-heart-container::after {
             content: ''; position: absolute; width: 120px; height: 120px; background-color: var(--main-color); border-radius: 50%;
         }
         .start-heart-container::before { top: -60px; left: 0; }
         .start-heart-container::after { top: 0; left: -60px; }
-        /* المحتوى الأسود داخل القلب */
+        
+        /* محتوى القلب (RORTY + Infinity) */
         .heart-inner-content {
-            transform: rotate(-45deg); /* عكس الدوران عشان الكلام يبقى مظبوط */
-            position: relative; z-index: 10;
+            transform: rotate(-45deg); z-index: 10;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: black; line-height: 1;
         }
-        .infinity-black { font-size: 4.5rem; margin-top: -10px; margin-bottom: -5px; }
-        .rorty-black { font-size: 1.2rem; font-weight: bold; font-family: sans-serif; letter-spacing: 2px; }
+        .infinity-black { font-size: 4.5rem; margin-top: -5px; font-weight: bold; }
+        .rorty-black { font-size: 1.4rem; font-weight: 800; font-family: 'Tajawal', sans-serif; letter-spacing: 1px; margin-top: -10px;}
         
-        /* جملة الدخول الجديدة */
+        /* جملة البداية (تم التعديل) */
         .phrase-msg {
-            color: #fff; margin-top: 40px; font-size: 1.8rem; 
-            font-family: 'Reem Kufi', sans-serif; /* خط عربي جميل */
-            text-shadow: 0 0 10px var(--main-color);
-            animation: pulse-text 2s infinite alternate; text-align: center; padding: 0 20px;
+            color: #fff; font-size: 1.6rem; font-weight: 700;
+            text-shadow: 0 0 15px var(--main-color);
+            opacity: 0.9; letter-spacing: 1px;
+            animation: floatText 3s ease-in-out infinite;
         }
-        @keyframes pulse-text { from { opacity: 0.7; text-shadow: 0 0 10px var(--main-color); } to { opacity: 1; text-shadow: 0 0 25px var(--main-color), 0 0 5px white; } }
-
+        @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* --- الكارت الرئيسي --- */
         .glass-card { 
-            background: rgba(255, 255, 255, 0.05); 
+            background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.08); 
             border-radius: 30px; padding: 40px 20px; 
             width: 90%; max-width: 400px; text-align: center; 
-            box-shadow: 0 0 50px rgba(255, 10, 84, 0.2);
-            opacity: 0; transform: scale(0.9); transition: all 1s ease;
+            box-shadow: 0 0 60px rgba(255, 10, 84, 0.15);
+            opacity: 0; transform: scale(0.95); transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .title { font-family: 'Great Vibes', cursive; font-size: 2.5rem; background: linear-gradient(to right, #ff0a54, #ff477e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; line-height: 1.2; text-shadow: 0 0 20px rgba(255, 10, 84, 0.3); }
-        .heart-icon { font-size: 5rem; margin-bottom: 20px; display: inline-block; cursor: pointer; animation: beat 1.2s infinite; filter: drop-shadow(0 0 20px var(--main-color)); }
-        @keyframes beat { 0%, 100% { transform: scale(1) rotate(45deg); } 15% { transform: scale(1.1) rotate(45deg); } 30% { transform: scale(1) rotate(45deg); } 45% { transform: scale(1.15) rotate(45deg); } 60% { transform: scale(1) rotate(45deg); } }
+        .title {
+            font-family: 'Great Vibes', cursive; font-size: 2.5rem;
+            background: linear-gradient(to right, #ff0a54, #ff477e);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; line-height: 1.2;
+            filter: drop-shadow(0 0 5px rgba(255, 10, 84, 0.5));
+        }
 
-        .lyrics-box { min-height: 80px; margin: 20px 0; display: flex; align-items: center; justify-content: center; }
-        .current-lyric { font-size: 1.3rem; color: #fff; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,0.8); transition: all 0.5s ease; opacity: 0; transform: translateY(20px); }
-        .current-lyric.visible { opacity: 1; transform: translateY(0); }
+        .heart-icon { font-size: 4rem; margin-bottom: 20px; display: inline-block; cursor: pointer; animation: beat 1.5s infinite; filter: drop-shadow(0 0 15px var(--main-color)); transition: transform 0.3s; }
+        .heart-icon:active { transform: scale(0.9); }
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        /* --- تأثير نعومة الكلمات (Blur Effect) --- */
+        .lyrics-box {
+            min-height: 90px; margin: 25px 0;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1000px;
+        }
+        .current-lyric {
+            font-size: 1.4rem; color: #fff; font-weight: 700;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            /* السحر هنا: انتقال ناعم جداً للشفافية والضبابية */
+            transition: opacity 1s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1s ease;
+            opacity: 0; 
+            transform: translateY(10px) scale(0.95);
+            filter: blur(8px); /* الكلمة بتكون "مغبشة" وهي مخفية */
+        }
+        .current-lyric.visible { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0px); /* توضح لما تظهر */
+        }
 
         .timer-container { display: flex; justify-content: center; gap: 10px; margin-top: 30px; direction: ltr; }
-        .time-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 15px; width: 60px; border: 1px solid rgba(255,255,255,0.1); }
+        .time-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; width: 60px; border: 1px solid rgba(255,255,255,0.1); }
         .t-num { font-size: 1.5rem; font-weight: bold; display: block; color: var(--main-color); }
         .t-label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
 
         #secretQR { display: none; margin-top: 20px; background: white; padding: 10px; border-radius: 10px; justify-content: center; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
     </style>
 </head>
@@ -94,27 +119,49 @@
                 <span class="rorty-black">RORTY</span>
             </div>
         </div>
-        <div class="phrase-msg">المُحب دائما يجد طريق</div>
+        <div class="phrase-msg">المُحب دائمـاً .. يجـد طـريقـاً</div>
     </div>
 
     <div id="youtube-player"></div>
 
     <div class="glass-card" id="mainCard">
-        <div class="heart-icon" ondblclick="showSecretQR()" style="transform: rotate(0deg); animation: none; font-size: 5rem;">❤️</div>
+        <div class="heart-icon" ondblclick="showSecretQR()">❤️</div>
+        
         <div class="title">Happy Valentine's<br>Day My Love</div>
-        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
+
+        <div class="lyrics-box">
+            <div id="lyricText" class="current-lyric"></div>
+        </div>
+
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">Days</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">Hrs</span></div>
             <div class="time-box"><span id="m" class="t-num">0</span><span class="t-label">Min</span></div>
             <div class="time-box"><span id="s" class="t-num">0</span><span class="t-label">Sec</span></div>
         </div>
+
         <div id="secretQR"></div>
     </div>
 
     <script>
-        const startSec = 24.5; const endSec = 71; 
-        const lyrics = [ { time: 27, text: "جمالها رهيب .." }, { time: 29, text: "جمالها رهيب .." }, { time: 32, text: "ولما تغيب .." }, { time: 34, text: "ولما تغيب .." }, { time: 36, text: "بشوّق شوفة عيونك" }, { time: 40, text: "وهفضل ألف ألف وراكي .." }, { time: 45, text: "ألف ألف وراكي .." }, { time: 50, text: "ألف ألف وراكي .." }, { time: 55, text: "لحد ما أغيب .." }, { time: 58, text: "لحد ما أغيب .." }, { time: 62, text: "بقى عقلي يخف .." }, { time: 66, text: "عقلي يلف .." } ];
+        // --- التوقيتات المحسنة (مقدمة قليلاً لتناسب الانتقال الناعم) ---
+        const startSec = 24.5; 
+        const endSec = 71; 
+
+        const lyrics = [
+            { time: 26.5, text: "جمالها رهيب .." },   // تقديم التوقيت عشان الـ Fade in
+            { time: 29.0, text: "جمالها رهيب .." },
+            { time: 32.0, text: "ولما تغيب .." },
+            { time: 34.0, text: "ولما تغيب .." },
+            { time: 36.5, text: "بشوّق شوفة عيونك .." },
+            { time: 40.0, text: "وهفضل ألف ألف وراكي .." },
+            { time: 45.0, text: "ألف ألف وراكي .." },
+            { time: 50.0, text: "ألف ألف وراكي .." },
+            { time: 54.5, text: "لحد ما أغيب .." },
+            { time: 58.0, text: "لحد ما أغيب .." },
+            { time: 61.5, text: "بقى عقلي يخف .." },
+            { time: 65.5, text: "عقلي يلف .." }
+        ];
 
         var player;
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
@@ -127,28 +174,51 @@
             if (event.data === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
             if (event.data === YT.PlayerState.ENDED) { player.seekTo(startSec); player.playVideo(); }
         }
+
+        // دالة المزامنة السلسة
         function checkTimeAndLyrics() {
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
+            
+            // Loop Logic
             if (ct >= endSec) player.seekTo(startSec);
+
+            // Lyrics Logic
             let currentText = "";
-            for (let i = 0; i < lyrics.length; i++) { if (ct >= lyrics[i].time && (i === lyrics.length - 1 || ct < lyrics[i+1].time)) { currentText = lyrics[i].text; break; } }
+            for (let i = 0; i < lyrics.length; i++) { 
+                if (ct >= lyrics[i].time && (i === lyrics.length - 1 || ct < lyrics[i+1].time)) { 
+                    currentText = lyrics[i].text; 
+                    break; 
+                } 
+            }
+
             const lyricDiv = document.getElementById('lyricText');
+            // لو النص اتغير، نعمل التأثير
             if (lyricDiv.innerText !== currentText && currentText !== "") {
+                // 1. اخفاء النص الحالي (Blur out)
                 lyricDiv.classList.remove('visible');
-                setTimeout(() => { lyricDiv.innerText = currentText; lyricDiv.classList.add('visible'); }, 200);
+                
+                // 2. انتظار بسيط جداً ثم تغيير النص واظهاره (Blur in)
+                setTimeout(() => { 
+                    lyricDiv.innerText = currentText; 
+                    lyricDiv.classList.add('visible'); 
+                }, 300); // سرعة التبديل
             }
             if (player.getPlayerState() === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
         }
 
         function startExperience() {
             document.getElementById('startOverlay').style.opacity = '0';
-            setTimeout(() => { document.getElementById('startOverlay').style.display = 'none'; }, 800);
-            const card = document.getElementById('mainCard'); card.style.opacity = '1'; card.style.transform = 'scale(1)';
+            setTimeout(() => { document.getElementById('startOverlay').style.display = 'none'; }, 1000);
+            
+            const card = document.getElementById('mainCard'); 
+            card.style.opacity = '1'; 
+            card.style.transform = 'scale(1)';
+            
             if(player) { player.seekTo(startSec); player.playVideo(); player.unMute(); player.setVolume(100); }
         }
 
-        // العداد من تاريخ 8 يناير 2025 (لن يتوقف أبداً)
+        // عداد الثواني (من 8 يناير 2025)
         const startDate = new Date(2025, 0, 8).getTime(); 
         setInterval(() => {
             const now = new Date().getTime(); let diff = now - startDate;
