@@ -68,7 +68,6 @@
         .heart-letter-r {
             position: absolute;
             top: 50%; left: 50%;
-            /* تم رفع الحرف للأعلى قليلاً ليتوسط القلب تماماً */
             transform: translate(-50%, -65%); 
             margin-top: 0; 
             color: black;
@@ -165,7 +164,8 @@
     </div>
 
     <script>
-        const startSec = 13.4; 
+        // التعديل الجوهري هنا لضبط الصوت
+        const startSec = 13.5; 
         const endSec = 58.0; 
 
         const lyrics = [
@@ -186,17 +186,23 @@
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', { videoId: 'pXava1lGms4', playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 }, events: { 'onStateChange': onPlayerStateChange } });
+            player = new YT.Player('youtube-player', { videoId: 'pXava1lGms4', playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1, 'start': 13 }, events: { 'onStateChange': onPlayerStateChange } });
         }
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
+            // إعادة التشغيل من نقطة البداية المطلوبة عند الانتهاء
             if (event.data === YT.PlayerState.ENDED) { player.seekTo(startSec); player.playVideo(); }
         }
 
         function checkTimeAndLyrics() {
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
-            if (ct >= endSec) player.seekTo(startSec);
+            
+            // إجبار الصوت على العودة للبداية إذا وصل للنهاية المحددة
+            if (ct >= endSec) {
+                player.seekTo(startSec);
+                return;
+            }
 
             let currentText = "";
             for (let i = 0; i < lyrics.length; i++) { 
