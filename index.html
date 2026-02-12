@@ -3,170 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Surprise</title>
+    <title>Valentine's Day</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root { 
-            --pure-red: #ff0000;
-            --glow-red: rgba(255, 0, 0, 0.7);
-            --bg-black: #000000;
-            --box-bg: #1a1a1a; 
-        }
+        :root { --pure-red: #ff0000; --bg-black: #000000; --box-bg: #1a1a1a; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-black); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        
-        #startOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
-            transition: opacity 0.8s ease;
-        }
-        
-        .start-heart-container {
-            position: relative; width: 120px; height: 120px;
-            display: flex; justify-content: center; align-items: center;
-            margin-bottom: 25px;
-            animation: beat 1.5s infinite;
-        }
+        #startOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.8s ease; }
+        .start-heart-container { position: relative; width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; animation: beat 1.5s infinite; }
         .svg-heart { fill: var(--pure-red); width: 100%; height: 100%; filter: drop-shadow(0 0 20px var(--pure-red)); }
         .heart-inner { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: black; line-height: 1; }
-        .infinity-symbol { font-size: 3rem; font-weight: bold; margin-bottom: -5px; }
-        .rorty-text { font-size: 1rem; font-weight: 800; letter-spacing: 1px; }
-
-        .phrase-msg {
-            color: #fff; font-size: 1.5rem; font-weight: 700;
-            text-shadow: 0 0 10px var(--pure-red);
-            margin-top: 20px;
-            animation: floatText 3s ease-in-out infinite;
-        }
-        @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .infinity-symbol { font-size: 3rem; font-weight: bold; }
+        .rorty-text { font-size: 1rem; font-weight: 800; }
+        .phrase-msg { color: #fff; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 10px var(--pure-red); margin-top: 20px; }
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-        .main-card { 
-            background: transparent; 
-            width: 95%; max-width: 400px; text-align: center; 
-            display: flex; flex-direction: column; align-items: center;
-            opacity: 0; transform: scale(0.95); transition: all 1s ease;
-        }
-
-        .main-heart-wrapper {
-            position: relative;
-            margin-bottom: 10px;
-            cursor: pointer;
-            animation: beat 2s infinite ease-in-out;
-            display: inline-block;
-        }
-
-        .main-heart {
-            font-size: 7.5rem;
-            color: var(--pure-red);
-            filter: drop-shadow(0 0 45px var(--pure-red));
-            line-height: 1;
-            display: block;
-        }
-
-        .heart-letter-r {
-            position: absolute;
-            top: 50%; left: 50%;
-            /* تم الرفع لـ 75% ليتوسط شكل القلب ♥️ بصرياً */
-            transform: translate(-50%, -75%); 
-            color: black;
-            font-size: 3rem;
-            font-weight: 900;
-            font-family: 'Cairo', sans-serif;
-            pointer-events: none;
-            line-height: 1;
-        }
-
-        .title {
-            font-family: 'Great Vibes', cursive; 
-            font-size: 2.6rem; 
-            color: var(--pure-red);
-            margin-bottom: 15px;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
-            line-height: 1.2;
-        }
-
-        .lyrics-box {
-            min-height: 120px; margin: 10px 0; width: 100%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .current-lyric {
-            font-size: 1.3rem;
-            color: var(--pure-red);
-            font-weight: 700; line-height: 1.5;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
-            transition: all 0.4s ease; opacity: 0; transform: translateY(15px); filter: blur(4px);
-            white-space: pre-line;
-        }
-        .current-lyric.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
-
-        .timer-container { 
-            display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; 
-        }
-        .time-box { 
-            background: var(--box-bg);
-            padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .t-num { 
-            font-size: 1.6rem; font-weight: 800; 
-            color: var(--pure-red); 
-            margin-bottom: 5px; text-shadow: 0 0 5px var(--glow-red); 
-        } 
-        .t-label { font-size: 0.75rem; color: #ccc; font-family: 'Cairo', sans-serif; font-weight: 600; }
-
-        #secretQR { display: none; margin-top: 30px; background: white; padding: 15px; border-radius: 15px; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        .main-card { width: 95%; max-width: 400px; text-align: center; opacity: 0; transform: scale(0.95); transition: all 1s ease; }
+        .main-heart-wrapper { position: relative; margin-bottom: 10px; cursor: pointer; animation: beat 2s infinite ease-in-out; display: inline-block; }
+        .main-heart { font-size: 7.5rem; color: var(--pure-red); filter: drop-shadow(0 0 45px var(--pure-red)); line-height: 1; display: block; }
+        .heart-letter-r { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -75%); color: black; font-size: 3rem; font-weight: 900; font-family: 'Cairo', sans-serif; }
+        .title { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--pure-red); margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
+        .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
+        .current-lyric { font-size: 1.3rem; color: var(--pure-red); font-weight: 700; text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); transition: all 0.4s ease; opacity: 0; transform: translateY(15px); }
+        .current-lyric.visible { opacity: 1; transform: translateY(0); }
+        .timer-container { display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; }
+        .time-box { background: var(--box-bg); padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
+        .t-num { font-size: 1.6rem; font-weight: 800; color: var(--pure-red); }
+        .t-label { font-size: 0.75rem; color: #ccc; }
         #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
-
     <div id="startOverlay" onclick="startExperience()">
         <div class="start-heart-container">
-            <svg class="svg-heart" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-            <div class="heart-inner">
-                <span class="infinity-symbol">∞</span>
-                <span class="rorty-text">RORTY</span>
-            </div>
+            <svg class="svg-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <div class="heart-inner"><span class="infinity-symbol">∞</span><span class="rorty-text">RORTY</span></div>
         </div>
         <div class="phrase-msg">المُحب دائمـاً .. يجـد طـريقـاً</div>
-        <div style="margin-top: 15px; color: #555; font-size: 0.9rem;">(Tap to Open)</div>
     </div>
-
     <div id="youtube-player"></div>
-
     <div class="main-card" id="mainCard">
-        <div class="main-heart-wrapper" ondblclick="showSecretQR()">
-            <div class="main-heart">♥️</div>
-            <div class="heart-letter-r">R</div>
-        </div>
-        
+        <div class="main-heart-wrapper"><div class="main-heart">♥️</div><div class="heart-letter-r">R</div></div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
-
-        <div class="lyrics-box">
-            <div id="lyricText" class="current-lyric"></div>
-        </div>
-
+        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
             <div class="time-box"><span id="m" class="t-num">0</span><span class="t-label">دقيقة</span></div>
             <div class="time-box"><span id="s" class="t-num">0</span><span class="t-label">ثانية</span></div>
         </div>
-
-        <div id="secretQR"></div>
     </div>
 
     <script>
-        const videoId = 'pXava1lGms4'; 
-        const startSec = 13.5; // توقيت البداية المضبوط
-        const endSec = 58.0;   // توقيت النهاية المضبوط
-
+        const startSec = 13.5; 
+        const endSec = 58.0; 
         const lyrics = [
             { time: 13.5, text: "بعيد الحب أبكتبلك و اسمعك" },
             { time: 16.5, text: "الذي فاتك و أتكلم و أشرحلك" },
@@ -181,54 +70,36 @@
         ];
 
         var player;
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
+        document.getElementsByTagName('head')[0].appendChild(tag);
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                height: '0', width: '0',
-                videoId: videoId,
-                playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1, 'playsinline': 1 },
+                height: '0', width: '0', videoId: 'pXava1lGms4',
+                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1, 'start': 13 },
                 events: { 'onStateChange': onPlayerStateChange }
             });
         }
 
         function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                requestAnimationFrame(checkTimeAndLyrics);
-            }
-            if (event.data === YT.PlayerState.ENDED) {
-                player.seekTo(startSec);
-                player.playVideo();
-            }
+            if (event.data === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
         }
 
         function checkTimeAndLyrics() {
-            if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
-            if (ct >= endSec) { player.seekTo(startSec); }
-
+            if (ct >= endSec) player.seekTo(startSec);
             let currentText = "";
-            for (let i = 0; i < lyrics.length; i++) { 
-                if (ct >= lyrics[i].time && (i === lyrics.length - 1 || ct < lyrics[i+1].time)) { 
-                    currentText = lyrics[i].text; 
-                    break; 
-                } 
+            for (let i = 0; i < lyrics.length; i++) {
+                if (ct >= lyrics[i].time && (i === lyrics.length - 1 || ct < lyrics[i+1].time)) {
+                    currentText = lyrics[i].text; break;
+                }
             }
-
             const lyricDiv = document.getElementById('lyricText');
             if (lyricDiv.innerText !== currentText && currentText !== "") {
                 lyricDiv.classList.remove('visible');
-                setTimeout(() => { 
-                    lyricDiv.innerText = currentText; 
-                    lyricDiv.classList.add('visible'); 
-                }, 100); 
+                setTimeout(() => { lyricDiv.innerText = currentText; lyricDiv.classList.add('visible'); }, 100);
             }
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                requestAnimationFrame(checkTimeAndLyrics);
-            }
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
         }
 
         function startExperience() {
@@ -237,34 +108,27 @@
             document.getElementById('mainCard').style.opacity = '1'; 
             document.getElementById('mainCard').style.transform = 'scale(1)';
             
-            if(player) { 
-                player.unMute();
-                player.seekTo(startSec); 
-                player.playVideo(); 
-                player.setVolume(100); 
+            if(player) {
+                player.mute(); 
+                player.playVideo();
+                let forceJump = setInterval(() => {
+                    player.seekTo(startSec);
+                    if (player.getCurrentTime() >= startSec - 0.5) {
+                        player.unMute(); 
+                        clearInterval(forceJump);
+                    }
+                }, 50); // سرعة استجابة عالية جداً (50 مللي ثانية)
             }
         }
 
         const startDate = new Date(2025, 0, 8).getTime(); 
         setInterval(() => {
             const now = new Date().getTime(); let diff = now - startDate;
-            if (diff >= 0) {
-                document.getElementById("d").innerText = Math.floor(diff / 86400000);
-                document.getElementById("h").innerText = Math.floor((diff % 86400000) / 3600000);
-                document.getElementById("m").innerText = Math.floor((diff % 3600000) / 60000);
-                document.getElementById("s").innerText = Math.floor((diff % 60000) / 1000);
-            }
+            document.getElementById("d").innerText = Math.floor(diff / 86400000);
+            document.getElementById("h").innerText = Math.floor((diff % 86400000) / 3600000);
+            document.getElementById("m").innerText = Math.floor((diff % 3600000) / 60000);
+            document.getElementById("s").innerText = Math.floor((diff % 60000) / 1000);
         }, 1000);
-
-        function showSecretQR() {
-            const qrBox = document.getElementById('secretQR');
-            if(qrBox.style.display === 'block') qrBox.style.display = 'none';
-            else { 
-                qrBox.style.display = 'block'; 
-                qrBox.innerHTML = ''; 
-                new QRCode(qrBox, {text: window.location.href, width: 120, height: 120, colorDark : "#000000", colorLight : "#ffffff"}); 
-            }
-        }
     </script>
 </body>
 </html>
