@@ -134,28 +134,27 @@
 
     <script>
         // --- إعدادات الأغنية (بعيد الحب - حقروص) ---
-        const startSec = 0; // تبدأ من الأول
-        const endSec = 250; // مدة طويلة عشان الأغنية كاملة
+        // البداية: تخطي المقدمة الموسيقية (تقريباً 13 ثانية)
+        // النهاية: بعد جملة "اذا مريت من جنبي" (تقريباً دقيقة و 4 ثواني)
+        const startSec = 13.0; 
+        const endSec = 64.0; 
 
-        // --- كلمات الأغنية ---
-        // ملاحظة: التوقيت (time) تقريبي، لو لقيت الكلام سابق أو متأخر ممكن تعدل الرقم اللي جنب كل جملة
+        // --- كلمات الأغنية (المقطع المطلوب) ---
         const lyrics = [
-            { time: 13.0, text: "بعيد الحب أبكتب لك .." },
-            { time: 16.0, text: "واسمعك الذي فاتك .." },
-            { time: 20.0, text: "وأتكلم وأشرح لك .." },
-            { time: 23.0, text: "حكاية عاشها قلبي .." },
-            { time: 27.0, text: "وانا صغير أناظر لك .." },
-            { time: 31.0, text: "واتابع كل خطواتك .." },
-            { time: 35.0, text: "وانت تبتسم لي .." },
-            { time: 38.0, text: "ولا تدري مدى حبي .." },
-            { time: 42.0, text: "وكنت اتعمد النظرة .." },
-            { time: 45.0, text: "عشان احظى بنظراتك .." },
-            { time: 49.0, text: "واتشقق من الفرحة .." },
-            { time: 52.0, text: "اذا مريت من جنبي .." },
-            { time: 56.0, text: "حبيبي يابعد عمري .." },
-            { time: 59.0, text: "ترى مشتاق همساتك .." },
-            { time: 63.0, text: "كافي بعد عن عيني .." },
-            { time: 66.0, text: "ترى اقسم لك بربي .." }
+            { time: 13.5, text: "بعيد الحب أبكتب لك .." },
+            { time: 15.5, text: "واسمعك الذي فاتك .." },
+            { time: 17.5, text: "وأتكلم وأشرح لك .." },
+            { time: 20.0, text: "حكاية عاشها قلبي .." },
+            { time: 22.5, text: "وانا صغير أناظر لك .." },
+            { time: 25.5, text: "وأتابع كل خطواتك .." },
+            { time: 30.0, text: "وانت تبتسم لي .." },
+            { time: 34.0, text: "ولا تدري مدى حبي .." },
+            { time: 38.0, text: "وكنت اتعمد النظرة .." },
+            { time: 42.0, text: "عشان احظى بنظراتك .." },
+            { time: 47.0, text: "واتشقق من الفرحة .." },
+            { time: 51.0, text: "اذا مريت من جنبي .." },
+            { time: 54.0, text: "واتشقق من الفرحة .." }, // تكرار للكورس في الأغنية
+            { time: 58.0, text: "اذا مريت من جنبي .." }
         ];
 
         var player;
@@ -163,7 +162,7 @@
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         function onYouTubeIframeAPIReady() {
-            // كود الفيديو الجديد (pXava1lGms4)
+            // كود الفيديو الرسمي (pXava1lGms4)
             player = new YT.Player('youtube-player', { videoId: 'pXava1lGms4', playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 }, events: { 'onStateChange': onPlayerStateChange } });
         }
         function onPlayerStateChange(event) {
@@ -175,7 +174,7 @@
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
             
-            // إعادة التكرار (Loop)
+            // Loop Logic: لما يوصل للنهاية يرجع للبداية المحددة
             if (ct >= endSec) player.seekTo(startSec);
 
             let currentText = "";
