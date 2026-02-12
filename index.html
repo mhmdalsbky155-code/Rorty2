@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valentine's Day</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --pure-red: #ff0000; --bg-black: #000000; --box-bg: #1a1a1a; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-black); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
@@ -25,18 +24,15 @@
         
         .title { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--pure-red); margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
         
-        /* نعومة الكتابة والقلوب الصغيرة */
-        .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; position: relative; }
+        /* تأثير التنقل السلس */
+        .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
         .current-lyric { 
             font-size: 1.3rem; color: var(--pure-red); font-weight: 700; 
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); 
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s ease; 
-            opacity: 0; transform: translateY(10px); white-space: pre-line; z-index: 5;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; 
+            opacity: 0; transform: translateY(5px); white-space: pre-line;
         }
         .current-lyric.visible { opacity: 1; transform: translateY(0); }
-        
-        .mini-heart { position: absolute; color: var(--pure-red); font-size: 14px; pointer-events: none; animation: flyUp 2s ease-out forwards; opacity: 0.6; }
-        @keyframes flyUp { 0% { transform: translate(0, 0) scale(1); opacity: 0.6; } 100% { transform: translate(var(--x), var(--y)) scale(0.5); opacity: 0; } }
 
         .timer-container { display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; }
         .time-box { background: var(--box-bg); padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
@@ -62,7 +58,7 @@
     <div class="main-card" id="mainCard">
         <div class="main-heart-wrapper"><div class="main-heart">♥️</div><div class="heart-letter-r">R</div></div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
-        <div class="lyrics-box" id="lyricsContainer"><div id="lyricText" class="current-lyric"></div></div>
+        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
@@ -80,11 +76,11 @@
             { time: 39.0, text: "الذي فاتك و أتكلم و أشرحلك" },
             { time: 44.0, text: "حكاية عاشها قلبي و انا صغير" },
             { time: 49.0, text: "اناظر لك و اتابع كل خطواتك" },
-            { time: 54.0, text: "و انت تبتسم ليا ولا تدري" },
+            { time: 54.0, text: "و تنت تبتسم ليا ولا تدري" },
             { time: 59.0, text: "ب مدي حبي" },
             { time: 64.0, text: "و كنت اتعمد النظره عشان احظي" },
             { time: 69.0, text: "بنظراتك واتشقق من الفرحه" },
-            { time: 74.0, text: "♥️Rاذا مريت من جنبييييييييي" },
+            { time: 74.0, text: "اذا مريت من جنبي" },
             { time: 79.0, text: "واتشقق من الفرحه\nاذا مريت من جنبي" }
         ];
 
@@ -98,19 +94,6 @@
                 playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
                 events: { 'onStateChange': onPlayerStateChange }
             });
-        }
-
-        function createMiniHeart() {
-            const container = document.getElementById('lyricsContainer');
-            for(let i=0; i<3; i++) {
-                const heart = document.createElement('div');
-                heart.innerHTML = '♥️'; heart.className = 'mini-heart';
-                heart.style.left = (50 + (Math.random()*40 - 20)) + '%';
-                heart.style.setProperty('--x', (Math.random()*60 - 30) + 'px');
-                heart.style.setProperty('--y', (Math.random()*-80 - 20) + 'px');
-                container.appendChild(heart);
-                setTimeout(() => heart.remove(), 2000);
-            }
         }
 
         function handleStart() {
@@ -154,7 +137,6 @@
                 setTimeout(() => { 
                     lyricDiv.innerText = currentText; 
                     lyricDiv.classList.add('visible'); 
-                    createMiniHeart();
                 }, 400); 
             }
         }
