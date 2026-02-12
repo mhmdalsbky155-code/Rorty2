@@ -63,7 +63,7 @@
 
     <script>
         const startPoint = 34.0;
-        const endPoint = 98.0; // 1:38 بالثواني
+        const endPoint = 98.0; 
 
         const lyrics = [
             { time: 34.0, text: "بعيد الحب أبكتبلك و اسمعك" },
@@ -74,7 +74,8 @@
             { time: 59.0, text: "ب مدي حبي" },
             { time: 64.0, text: "و كنت اتعمد النظره عشان احظي" },
             { time: 69.0, text: "بنظراتك واتشقق من الفرحه" },
-            { time: 74.0, text: "اذا مريت من جنبي" }
+            { time: 74.0, text: "اذا مريت من جنبي" },
+            { time: 79.0, text: "واتشقق من الفرحه\nاذا مريت من جنبي" }
         ];
 
         var player;
@@ -109,10 +110,12 @@
         }
 
         function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) requestAnimationFrame(syncUI);
+            if (event.data === YT.PlayerState.PLAYING) {
+                setInterval(syncLyrics, 100);
+            }
         }
 
-        function syncUI() {
+        function syncLyrics() {
             let ct = player.getCurrentTime();
             if (ct >= endPoint) player.seekTo(startPoint);
 
@@ -123,11 +126,10 @@
                 }
             }
             const lyricDiv = document.getElementById('lyricText');
-            if (lyricDiv.innerText !== currentText && currentText !== "") {
+            if (lyricDiv && lyricDiv.innerText !== currentText && currentText !== "") {
                 lyricDiv.classList.remove('visible');
-                setTimeout(() => { lyricDiv.innerText = currentText; lyricDiv.classList.add('visible'); }, 100);
+                setTimeout(() => { lyricDiv.innerText = currentText; lyricDiv.classList.add('visible'); }, 50);
             }
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) requestAnimationFrame(syncUI);
         }
 
         const startDate = new Date(2025, 0, 8).getTime(); 
