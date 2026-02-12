@@ -15,7 +15,7 @@
         .heart-inner { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: black; line-height: 1; }
         .infinity-symbol { font-size: 3rem; font-weight: bold; margin-bottom: -5px; }
         .rorty-text { font-size: 1rem; font-weight: 800; }
-        .phrase-msg { color: #fff; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 10px var(--pure-red); margin-top: 20px; }
+        .phrase-msg { color: #fff; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 10px var(--pure-red); margin-top: 20px; text-align: center; padding: 0 20px; }
 
         .main-card { width: 95%; max-width: 400px; text-align: center; display: none; opacity: 0; transform: scale(0.95); transition: all 1s ease; }
         .main-heart-wrapper { position: relative; margin-bottom: 10px; animation: beat 2s infinite ease-in-out; display: inline-block; }
@@ -24,7 +24,6 @@
         
         .title { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--pure-red); margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
         
-        /* تأثير التنقل السلس */
         .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
         #lyricText { 
             font-size: 1.3rem; color: var(--pure-red); font-weight: 700; 
@@ -68,6 +67,7 @@
     </div>
 
     <script>
+        const videoId = 'pXava1lGms4';
         const startPoint = 34.0;
         const endPoint = 98.0; 
 
@@ -90,29 +90,39 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                videoId: 'pXava1lGms4',
-                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
-                events: { 'onStateChange': onPlayerStateChange }
+                videoId: videoId,
+                playerVars: { 
+                    'autoplay': 0, 
+                    'controls': 0, 
+                    'disablekb': 1,
+                    'playsinline': 1,
+                    'start': 34
+                },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
             });
         }
 
+        function onPlayerReady(event) {
+            // المشغل جاهز
+        }
+
         function handleStart() {
-            document.getElementById('msg').innerText = "جاري التحميل...";
-            player.mute(); player.playVideo();
-            let forceSeek = setInterval(() => {
-                player.seekTo(startPoint);
-                if (Math.abs(player.getCurrentTime() - startPoint) < 1.5) {
-                    clearInterval(forceSeek);
-                    player.unMute();
-                    document.getElementById('startOverlay').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('startOverlay').style.display = 'none';
-                        const card = document.getElementById('mainCard');
-                        card.style.display = 'block';
-                        setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 50);
-                    }, 800);
-                }
-            }, 100);
+            // انتقال فوري لعدم تعليق المستخدم
+            document.getElementById('startOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('startOverlay').style.display = 'none';
+                const card = document.getElementById('mainCard');
+                card.style.display = 'block';
+                setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 50);
+            }, 500);
+
+            // تشغيل الأغنية ومحاولة القفز للثانية 34
+            if (player && player.playVideo) {
+                player.playVideo();
+                player.unMute();
+                player.setVolume(100);
+                player.seekTo(startPoint, true);
+            }
         }
 
         function onPlayerStateChange(event) {
@@ -124,6 +134,8 @@
         function syncLyrics() {
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
+            
+            // التكرار (Loop)
             if (ct >= endPoint) player.seekTo(startPoint);
 
             let currentText = "";
@@ -143,6 +155,7 @@
             }
         }
 
+        // العداد الزمني
         const startDate = new Date(2025, 0, 8).getTime(); 
         setInterval(() => {
             const now = new Date().getTime(); let diff = now - startDate;
