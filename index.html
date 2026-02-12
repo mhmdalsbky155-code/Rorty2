@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --main-color: #ff0a54; --bg-color: #050505; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-color); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* الخلفية والنجوم */
+        /* الخلفية */
         body::before { content: ''; position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at center, #2b0c15 0%, #000 100%); z-index: -2; }
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-image: radial-gradient(white 1px, transparent 1px); background-size: 50px 50px; opacity: 0.3; }
 
@@ -22,37 +22,41 @@
             transition: opacity 1s ease;
         }
         
-        /* القلب في شاشة البداية */
-        .start-heart-container {
-            position: relative; width: 120px; height: 120px; background-color: var(--main-color);
-            transform: rotate(45deg); margin-top: -50px; margin-bottom: 40px;
-            box-shadow: 0 0 50px var(--main-color);
+        /* حاوية القلب في البداية */
+        .start-heart-wrapper {
+            position: relative;
             display: flex; justify-content: center; align-items: center;
-            animation: beat 2s infinite ease-in-out;
+            margin-bottom: 30px;
+            animation: beat 1.5s infinite ease-in-out;
         }
-        .start-heart-container::before, .start-heart-container::after {
-            content: ''; position: absolute; width: 120px; height: 120px; background-color: var(--main-color); border-radius: 50%;
-        }
-        .start-heart-container::before { top: -60px; left: 0; }
-        .start-heart-container::after { top: 0; left: -60px; }
         
-        /* محتوى القلب (RORTY + Infinity) */
-        .heart-inner-content {
-            transform: rotate(-45deg); z-index: 10;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: black; line-height: 1;
+        /* القلب نفسه (SVG لضمان الشكل المعدول) */
+        .svg-heart {
+            fill: var(--main-color);
+            width: 180px;
+            filter: drop-shadow(0 0 30px var(--main-color));
         }
-        .infinity-black { font-size: 4.5rem; margin-top: -5px; font-weight: bold; }
-        .rorty-black { font-size: 1.4rem; font-weight: 800; font-family: 'Tajawal', sans-serif; letter-spacing: 1px; margin-top: -10px;}
-        
-        /* جملة البداية (تم التعديل) */
+
+        /* النصوص داخل القلب */
+        .heart-inner-text {
+            position: absolute;
+            top: 45%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center;
+            color: black; line-height: 1; text-align: center;
+            width: 100%;
+        }
+        .infinity-symbol { font-size: 3.5rem; font-weight: bold; margin-bottom: -5px; }
+        .rorty-text { font-size: 1.2rem; font-weight: 900; letter-spacing: 1px; font-family: 'Tajawal', sans-serif; }
+
+        /* جملة البداية */
         .phrase-msg {
             color: #fff; font-size: 1.6rem; font-weight: 700;
             text-shadow: 0 0 15px var(--main-color);
-            opacity: 0.9; letter-spacing: 1px;
+            margin-top: 20px;
             animation: floatText 3s ease-in-out infinite;
         }
         @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         /* --- الكارت الرئيسي --- */
         .glass-card { 
@@ -73,29 +77,28 @@
             filter: drop-shadow(0 0 5px rgba(255, 10, 84, 0.5));
         }
 
-        .heart-icon { font-size: 4rem; margin-bottom: 20px; display: inline-block; cursor: pointer; animation: beat 1.5s infinite; filter: drop-shadow(0 0 15px var(--main-color)); transition: transform 0.3s; }
-        .heart-icon:active { transform: scale(0.9); }
-        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .main-heart-icon { font-size: 4rem; margin-bottom: 20px; display: inline-block; cursor: pointer; animation: beat 1.5s infinite; filter: drop-shadow(0 0 15px var(--main-color)); transition: transform 0.3s; }
+        .main-heart-icon:active { transform: scale(0.9); }
 
-        /* --- تأثير نعومة الكلمات (Blur Effect) --- */
+        /* --- الكلمات (Lyrics) --- */
         .lyrics-box {
             min-height: 90px; margin: 25px 0;
             display: flex; align-items: center; justify-content: center;
             perspective: 1000px;
         }
         .current-lyric {
-            font-size: 1.4rem; color: #fff; font-weight: 700;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            /* السحر هنا: انتقال ناعم جداً للشفافية والضبابية */
-            transition: opacity 1s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1s ease;
+            font-size: 1.5rem; color: #fff; font-weight: 700;
+            text-shadow: 0 0 15px rgba(255, 10, 84, 0.6);
+            /* سرعة الانتقال */
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.8s ease;
             opacity: 0; 
-            transform: translateY(10px) scale(0.95);
-            filter: blur(8px); /* الكلمة بتكون "مغبشة" وهي مخفية */
+            transform: translateY(15px) scale(0.9);
+            filter: blur(10px);
         }
         .current-lyric.visible { 
             opacity: 1; 
             transform: translateY(0) scale(1); 
-            filter: blur(0px); /* توضح لما تظهر */
+            filter: blur(0px);
         }
 
         .timer-container { display: flex; justify-content: center; gap: 10px; margin-top: 30px; direction: ltr; }
@@ -113,10 +116,13 @@
     <div class="stars"></div>
 
     <div id="startOverlay" onclick="startExperience()">
-        <div class="start-heart-container">
-            <div class="heart-inner-content">
-                <span class="infinity-black">∞</span>
-                <span class="rorty-black">RORTY</span>
+        <div class="start-heart-wrapper">
+            <svg class="svg-heart" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <div class="heart-inner-text">
+                <span class="infinity-symbol">∞</span>
+                <span class="rorty-text">RORTY</span>
             </div>
         </div>
         <div class="phrase-msg">المُحب دائمـاً .. يجـد طـريقـاً</div>
@@ -125,7 +131,7 @@
     <div id="youtube-player"></div>
 
     <div class="glass-card" id="mainCard">
-        <div class="heart-icon" ondblclick="showSecretQR()">❤️</div>
+        <div class="main-heart-icon" ondblclick="showSecretQR()">❤️</div>
         
         <div class="title">Happy Valentine's<br>Day My Love</div>
 
@@ -144,23 +150,25 @@
     </div>
 
     <script>
-        // --- التوقيتات المحسنة (مقدمة قليلاً لتناسب الانتقال الناعم) ---
+        // --- إعدادات الأغنية ---
         const startSec = 24.5; 
         const endSec = 71; 
 
+        // --- تعديل التوقيت: تقديم المواعيد (ناقص 1.5 ثانية) ---
+        // عشان الكلمة تلحق تظهر من الـ Blur
         const lyrics = [
-            { time: 26.5, text: "جمالها رهيب .." },   // تقديم التوقيت عشان الـ Fade in
-            { time: 29.0, text: "جمالها رهيب .." },
-            { time: 32.0, text: "ولما تغيب .." },
-            { time: 34.0, text: "ولما تغيب .." },
-            { time: 36.5, text: "بشوّق شوفة عيونك .." },
-            { time: 40.0, text: "وهفضل ألف ألف وراكي .." },
-            { time: 45.0, text: "ألف ألف وراكي .." },
-            { time: 50.0, text: "ألف ألف وراكي .." },
-            { time: 54.5, text: "لحد ما أغيب .." },
-            { time: 58.0, text: "لحد ما أغيب .." },
-            { time: 61.5, text: "بقى عقلي يخف .." },
-            { time: 65.5, text: "عقلي يلف .." }
+            { time: 25.0, text: "جمالها رهيب .." },
+            { time: 28.0, text: "جمالها رهيب .." },
+            { time: 30.5, text: "ولما تغيب .." },
+            { time: 33.0, text: "ولما تغيب .." },
+            { time: 35.0, text: "بشوّق شوفة عيونك .." },
+            { time: 38.5, text: "وهفضل ألف ألف وراكي .." }, // هنا الرتم بيسرع
+            { time: 43.5, text: "ألف ألف وراكي .." },
+            { time: 48.5, text: "ألف ألف وراكي .." },
+            { time: 53.0, text: "لحد ما أغيب .." },
+            { time: 56.5, text: "لحد ما أغيب .." },
+            { time: 60.0, text: "بقى عقلي يخف .." },
+            { time: 64.0, text: "عقلي يلف .." }
         ];
 
         var player;
@@ -175,15 +183,12 @@
             if (event.data === YT.PlayerState.ENDED) { player.seekTo(startSec); player.playVideo(); }
         }
 
-        // دالة المزامنة السلسة
         function checkTimeAndLyrics() {
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
             
-            // Loop Logic
             if (ct >= endSec) player.seekTo(startSec);
 
-            // Lyrics Logic
             let currentText = "";
             for (let i = 0; i < lyrics.length; i++) { 
                 if (ct >= lyrics[i].time && (i === lyrics.length - 1 || ct < lyrics[i+1].time)) { 
@@ -193,16 +198,13 @@
             }
 
             const lyricDiv = document.getElementById('lyricText');
-            // لو النص اتغير، نعمل التأثير
             if (lyricDiv.innerText !== currentText && currentText !== "") {
-                // 1. اخفاء النص الحالي (Blur out)
                 lyricDiv.classList.remove('visible');
-                
-                // 2. انتظار بسيط جداً ثم تغيير النص واظهاره (Blur in)
+                // تقليل وقت الانتظار عشان تظهر أسرع
                 setTimeout(() => { 
                     lyricDiv.innerText = currentText; 
                     lyricDiv.classList.add('visible'); 
-                }, 300); // سرعة التبديل
+                }, 150); 
             }
             if (player.getPlayerState() === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
         }
@@ -218,7 +220,6 @@
             if(player) { player.seekTo(startSec); player.playVideo(); player.unMute(); player.setVolume(100); }
         }
 
-        // عداد الثواني (من 8 يناير 2025)
         const startDate = new Date(2025, 0, 8).getTime(); 
         setInterval(() => {
             const now = new Date().getTime(); let diff = now - startDate;
