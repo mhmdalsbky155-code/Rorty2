@@ -26,13 +26,13 @@
         
         /* تأثير التنقل السلس */
         .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
-        .current-lyric { 
+        #lyricText { 
             font-size: 1.3rem; color: var(--pure-red); font-weight: 700; 
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); 
-            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; 
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; 
             opacity: 0; transform: translateY(5px); white-space: pre-line;
         }
-        .current-lyric.visible { opacity: 1; transform: translateY(0); }
+        #lyricText.visible { opacity: 1; transform: translateY(0); }
 
         .timer-container { display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; }
         .time-box { background: var(--box-bg); padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
@@ -58,7 +58,7 @@
     <div class="main-card" id="mainCard">
         <div class="main-heart-wrapper"><div class="main-heart">♥️</div><div class="heart-letter-r">R</div></div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
-        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
+        <div class="lyrics-box"><div id="lyricText"></div></div>
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
@@ -122,6 +122,7 @@
         }
 
         function syncLyrics() {
+            if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
             if (ct >= endPoint) player.seekTo(startPoint);
 
@@ -131,13 +132,14 @@
                     currentText = lyrics[i].text; break;
                 }
             }
+            
             const lyricDiv = document.getElementById('lyricText');
             if (lyricDiv && lyricDiv.innerText !== currentText && currentText !== "") {
                 lyricDiv.classList.remove('visible');
                 setTimeout(() => { 
                     lyricDiv.innerText = currentText; 
                     lyricDiv.classList.add('visible'); 
-                }, 400); 
+                }, 100); 
             }
         }
 
