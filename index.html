@@ -42,7 +42,10 @@
     </div>
     <div id="youtube-player"></div>
     <div class="main-card" id="mainCard">
-        <div class="main-heart-wrapper"><div class="main-heart">♥️</div><div class="heart-letter-r">R</div></div>
+        <div class="main-heart-wrapper">
+            <div class="main-heart">♥️</div>
+            <div class="heart-letter-r">R</div>
+        </div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
         <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
         <div class="timer-container">
@@ -109,15 +112,13 @@
             document.getElementById('mainCard').style.transform = 'scale(1)';
             
             if(player) {
-                player.mute(); 
                 player.playVideo();
-                let forceJump = setInterval(() => {
+                let jump = setInterval(() => {
                     player.seekTo(startSec);
-                    if (player.getCurrentTime() >= startSec - 0.5) {
-                        player.unMute(); 
-                        clearInterval(forceJump);
+                    if (Math.abs(player.getCurrentTime() - startSec) < 1) {
+                        player.unMute(); clearInterval(jump);
                     }
-                }, 50); // سرعة استجابة عالية جداً (50 مللي ثانية)
+                }, 100);
             }
         }
 
