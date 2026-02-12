@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Valentine's Day</title>
+    <title>Valentine's Surprise</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { 
             --pure-red: #ff0000;
-            --glow-red: rgba(255, 0, 0, 0.6);
+            --glow-red: rgba(255, 0, 0, 0.7);
             --bg-black: #000000;
             --box-bg: #1a1a1a; 
         }
@@ -58,9 +58,9 @@
         }
 
         .main-heart {
-            font-size: 7rem;
+            font-size: 7.5rem;
             color: var(--pure-red);
-            filter: drop-shadow(0 0 40px var(--pure-red));
+            filter: drop-shadow(0 0 45px var(--pure-red));
             line-height: 1;
             display: block;
         }
@@ -68,10 +68,10 @@
         .heart-letter-r {
             position: absolute;
             top: 50%; left: 50%;
-            transform: translate(-50%, -65%); 
-            margin-top: 0; 
+            /* تم الرفع لـ 75% ليتوسط شكل القلب ♥️ بصرياً */
+            transform: translate(-50%, -75%); 
             color: black;
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 900;
             font-family: 'Cairo', sans-serif;
             pointer-events: none;
@@ -80,11 +80,10 @@
 
         .title {
             font-family: 'Great Vibes', cursive; 
-            font-size: 2.5rem; 
-            font-weight: 400;
+            font-size: 2.6rem; 
             color: var(--pure-red);
             margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
             line-height: 1.2;
         }
 
@@ -93,10 +92,10 @@
             display: flex; align-items: center; justify-content: center;
         }
         .current-lyric {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--pure-red);
             font-weight: 700; line-height: 1.5;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
             transition: all 0.4s ease; opacity: 0; transform: translateY(15px); filter: blur(4px);
             white-space: pre-line;
         }
@@ -164,9 +163,9 @@
     </div>
 
     <script>
-        // التعديل الجوهري هنا لضبط الصوت
-        const startSec = 13.5; 
-        const endSec = 58.0; 
+        const videoId = 'pXava1lGms4'; 
+        const startSec = 13.5; // توقيت البداية المضبوط
+        const endSec = 58.0;   // توقيت النهاية المضبوط
 
         const lyrics = [
             { time: 13.5, text: "بعيد الحب أبكتبلك و اسمعك" },
@@ -182,27 +181,34 @@
         ];
 
         var player;
-        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', { videoId: 'pXava1lGms4', playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1, 'start': 13 }, events: { 'onStateChange': onPlayerStateChange } });
+            player = new YT.Player('youtube-player', {
+                height: '0', width: '0',
+                videoId: videoId,
+                playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1, 'playsinline': 1 },
+                events: { 'onStateChange': onPlayerStateChange }
+            });
         }
+
         function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
-            // إعادة التشغيل من نقطة البداية المطلوبة عند الانتهاء
-            if (event.data === YT.PlayerState.ENDED) { player.seekTo(startSec); player.playVideo(); }
+            if (event.data === YT.PlayerState.PLAYING) {
+                requestAnimationFrame(checkTimeAndLyrics);
+            }
+            if (event.data === YT.PlayerState.ENDED) {
+                player.seekTo(startSec);
+                player.playVideo();
+            }
         }
 
         function checkTimeAndLyrics() {
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
-            
-            // إجبار الصوت على العودة للبداية إذا وصل للنهاية المحددة
-            if (ct >= endSec) {
-                player.seekTo(startSec);
-                return;
-            }
+            if (ct >= endSec) { player.seekTo(startSec); }
 
             let currentText = "";
             for (let i = 0; i < lyrics.length; i++) { 
@@ -220,19 +226,21 @@
                     lyricDiv.classList.add('visible'); 
                 }, 100); 
             }
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) requestAnimationFrame(checkTimeAndLyrics);
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                requestAnimationFrame(checkTimeAndLyrics);
+            }
         }
 
         function startExperience() {
             document.getElementById('startOverlay').style.opacity = '0';
             setTimeout(() => { document.getElementById('startOverlay').style.display = 'none'; }, 800);
-            const card = document.getElementById('mainCard'); 
-            card.style.opacity = '1'; 
-            card.style.transform = 'scale(1)';
+            document.getElementById('mainCard').style.opacity = '1'; 
+            document.getElementById('mainCard').style.transform = 'scale(1)';
+            
             if(player) { 
+                player.unMute();
                 player.seekTo(startSec); 
                 player.playVideo(); 
-                player.unMute(); 
                 player.setVolume(100); 
             }
         }
