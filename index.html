@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valentine's Day</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --pure-red: #ff0000; --bg-black: #000000; --box-bg: #1a1a1a; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-black); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
@@ -15,7 +16,7 @@
         .heart-inner { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: black; line-height: 1; }
         .infinity-symbol { font-size: 3rem; font-weight: bold; margin-bottom: -5px; }
         .rorty-text { font-size: 1rem; font-weight: 800; }
-        .phrase-msg { color: #fff; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 10px var(--pure-red); margin-top: 20px; text-align: center; padding: 0 20px; }
+        .phrase-msg { color: #fff; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 10px var(--pure-red); margin-top: 20px; }
 
         .main-card { width: 95%; max-width: 400px; text-align: center; display: none; opacity: 0; transform: scale(0.95); transition: all 1s ease; }
         .main-heart-wrapper { position: relative; margin-bottom: 10px; animation: beat 2s infinite ease-in-out; display: inline-block; }
@@ -24,15 +25,25 @@
         
         .title { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--pure-red); margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
         
+        /* تأثير التنقل السلس المطور */
         .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
-        #lyricText { 
-            font-size: 1.3rem; color: var(--pure-red); font-weight: 700; 
+        .current-lyric { 
+            font-size: 1.3rem; 
+            color: var(--pure-red); 
+            font-weight: 700; 
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); 
-            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; 
-            opacity: 0; transform: translateY(5px); white-space: pre-line;
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* انتقال ناعم جداً */
+            opacity: 0; 
+            transform: translateY(10px) scale(0.95); /* يبدأ من الأسفل مع تصغير خفيف */
+            filter: blur(5px); /* يبدأ بتمويه */
+            white-space: pre-line; 
         }
-        #lyricText.visible { opacity: 1; transform: translateY(0); }
-
+        .current-lyric.visible { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0); /* يختفي التمويه عند الظهور */
+        }
+        
         .timer-container { display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; }
         .time-box { background: var(--box-bg); padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
         .t-num { font-size: 1.6rem; font-weight: 800; color: var(--pure-red); }
@@ -57,7 +68,7 @@
     <div class="main-card" id="mainCard">
         <div class="main-heart-wrapper"><div class="main-heart">♥️</div><div class="heart-letter-r">R</div></div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
-        <div class="lyrics-box"><div id="lyricText"></div></div>
+        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
@@ -67,7 +78,6 @@
     </div>
 
     <script>
-        const videoId = 'pXava1lGms4';
         const startPoint = 34.0;
         const endPoint = 98.0; 
 
@@ -76,12 +86,12 @@
             { time: 39.0, text: "الذي فاتك و أتكلم و أشرحلك" },
             { time: 44.0, text: "حكاية عاشها قلبي و انا صغير" },
             { time: 49.0, text: "اناظر لك و اتابع كل خطواتك" },
-            { time: 54.0, text: "و تنت تبتسم ليا ولا تدري" },
+            { time: 54.0, text: "و انت تبتسم ليا ولا تدري" },
             { time: 59.0, text: "ب مدي حبي" },
             { time: 64.0, text: "و كنت اتعمد النظره عشان احظي" },
             { time: 69.0, text: "بنظراتك واتشقق من الفرحه" },
             { time: 74.0, text: "اذا مريت من جنبي" },
-            { time: 79.0, text: "واتشقق من الفرحه\nاذا مريت من جنبي" }
+            { time: 79.0, text: "LOVE YOU FOREVER\n" }
         ];
 
         var player;
@@ -90,39 +100,29 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                videoId: videoId,
-                playerVars: { 
-                    'autoplay': 0, 
-                    'controls': 0, 
-                    'disablekb': 1,
-                    'playsinline': 1,
-                    'start': 34
-                },
-                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+                videoId: 'pXava1lGms4',
+                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
+                events: { 'onStateChange': onPlayerStateChange }
             });
         }
 
-        function onPlayerReady(event) {
-            // المشغل جاهز
-        }
-
         function handleStart() {
-            // انتقال فوري لعدم تعليق المستخدم
-            document.getElementById('startOverlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('startOverlay').style.display = 'none';
-                const card = document.getElementById('mainCard');
-                card.style.display = 'block';
-                setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 50);
-            }, 500);
-
-            // تشغيل الأغنية ومحاولة القفز للثانية 34
-            if (player && player.playVideo) {
-                player.playVideo();
-                player.unMute();
-                player.setVolume(100);
-                player.seekTo(startPoint, true);
-            }
+            document.getElementById('msg').innerText = "جاري التحميل...";
+            player.mute(); player.playVideo();
+            let forceSeek = setInterval(() => {
+                player.seekTo(startPoint);
+                if (Math.abs(player.getCurrentTime() - startPoint) < 1.5) {
+                    clearInterval(forceSeek);
+                    player.unMute();
+                    document.getElementById('startOverlay').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('startOverlay').style.display = 'none';
+                        const card = document.getElementById('mainCard');
+                        card.style.display = 'block';
+                        setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 50);
+                    }, 800);
+                }
+            }, 100);
         }
 
         function onPlayerStateChange(event) {
@@ -132,10 +132,7 @@
         }
 
         function syncLyrics() {
-            if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
-            
-            // التكرار (Loop)
             if (ct >= endPoint) player.seekTo(startPoint);
 
             let currentText = "";
@@ -144,18 +141,17 @@
                     currentText = lyrics[i].text; break;
                 }
             }
-            
             const lyricDiv = document.getElementById('lyricText');
             if (lyricDiv && lyricDiv.innerText !== currentText && currentText !== "") {
                 lyricDiv.classList.remove('visible');
+                // تأخير بسيط جداً لضمان انتهاء الـ Fade Out قبل بدء الـ Fade In
                 setTimeout(() => { 
                     lyricDiv.innerText = currentText; 
                     lyricDiv.classList.add('visible'); 
-                }, 100); 
+                }, 400); 
             }
         }
 
-        // العداد الزمني
         const startDate = new Date(2025, 0, 8).getTime(); 
         setInterval(() => {
             const now = new Date().getTime(); let diff = now - startDate;
