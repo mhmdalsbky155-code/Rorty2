@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
+    <title>Happy Valentine's Day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { 
-            --pure-red: #ff0000; /* أحمر صريح */
+            --pure-red: #ff0000;
             --glow-red: rgba(255, 0, 0, 0.6);
             --bg-black: #000000;
             --box-bg: #1a1a1a; 
         }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-black); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* شاشة البداية */
         #startOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 10000;
@@ -23,7 +22,6 @@
             transition: opacity 0.8s ease;
         }
         
-        /* القلب في البداية */
         .start-heart-container {
             position: relative; width: 120px; height: 120px;
             display: flex; justify-content: center; align-items: center;
@@ -37,71 +35,73 @@
 
         .phrase-msg {
             color: #fff; font-size: 1.5rem; font-weight: 700;
-            text-shadow: 0 0 10px var(--pure-red); /* إضاءة حمراء للكلام */
+            text-shadow: 0 0 10px var(--pure-red);
             margin-top: 20px;
             animation: floatText 3s ease-in-out infinite;
         }
         @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        /* --- الكارت الرئيسي --- */
         .main-card { 
             background: transparent; 
-            width: 90%; max-width: 400px; text-align: center; 
+            width: 95%; max-width: 400px; text-align: center; 
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; transform: scale(0.95); transition: all 1s ease;
         }
 
-        /* حاوية القلب بحرف R */
         .main-heart-wrapper {
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             cursor: pointer;
             animation: beat 2s infinite ease-in-out;
+            display: inline-block;
         }
 
-        /* القلب الأحمر المتوهج */
         .main-heart {
-            font-size: 6.5rem; 
-            color: var(--pure-red); /* لون أحمر */
+            font-size: 7rem;
+            color: var(--pure-red);
             filter: drop-shadow(0 0 40px var(--pure-red));
             line-height: 1;
+            display: block;
         }
 
-        /* حرف R الأسود */
         .heart-letter-r {
             position: absolute;
             top: 50%; left: 50%;
-            transform: translate(-50%, -55%); /* تظبيط السنتر */
+            transform: translate(-50%, -50%);
+            margin-top: 0.1em; 
             color: black;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
             font-family: 'Cairo', sans-serif;
-            pointer-events: none; /* عشان الضغط يروح للقلب */
+            pointer-events: none;
+            line-height: 1;
         }
 
         .title {
-            font-family: 'Cairo', sans-serif; font-size: 2rem; font-weight: 700;
-            color: var(--pure-red); /* العنوان أحمر */
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            font-family: 'Great Vibes', cursive; 
+            font-size: 2.5rem; 
+            font-weight: 400;
+            color: var(--pure-red);
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            line-height: 1.2;
         }
 
-        /* كلمات الأغنية (لون أحمر) */
         .lyrics-box {
-            min-height: 100px; margin: 20px 0; width: 100%;
+            min-height: 120px; margin: 10px 0; width: 100%;
             display: flex; align-items: center; justify-content: center;
         }
         .current-lyric {
-            font-size: 1.4rem; 
-            color: var(--pure-red); /* الكلام أحمر */
-            font-weight: 700; line-height: 1.6;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* توهج أحمر */
+            font-size: 1.2rem;
+            color: var(--pure-red);
+            font-weight: 700; line-height: 1.5;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
             transition: all 0.4s ease; opacity: 0; transform: translateY(15px); filter: blur(4px);
+            white-space: pre-line;
         }
         .current-lyric.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-        /* العداد */
         .timer-container { 
             display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; 
         }
@@ -112,7 +112,7 @@
         }
         .t-num { 
             font-size: 1.6rem; font-weight: 800; 
-            color: var(--pure-red); /* الأرقام حمراء */
+            color: var(--pure-red); 
             margin-bottom: 5px; text-shadow: 0 0 5px var(--glow-red); 
         } 
         .t-label { font-size: 0.75rem; color: #ccc; font-family: 'Cairo', sans-serif; font-weight: 600; }
@@ -136,18 +136,18 @@
             </div>
         </div>
         <div class="phrase-msg">المُحب دائمـاً .. يجـد طـريقـاً</div>
-        <div style="margin-top: 15px; color: #555; font-size: 0.9rem;">(اضغط للفتح)</div>
+        <div style="margin-top: 15px; color: #555; font-size: 0.9rem;">(Tap to Open)</div>
     </div>
 
     <div id="youtube-player"></div>
 
     <div class="main-card" id="mainCard">
         <div class="main-heart-wrapper" ondblclick="showSecretQR()">
-            <div class="main-heart">❤️</div>
+            <div class="main-heart">♥️</div>
             <div class="heart-letter-r">R</div>
         </div>
         
-        <div class="title">Happy Valentine's</div>
+        <div class="title">Happy Valentine's Day<br>My Sweetie</div>
 
         <div class="lyrics-box">
             <div id="lyricText" class="current-lyric"></div>
@@ -164,26 +164,20 @@
     </div>
 
     <script>
-        // --- إعدادات الأغنية (عيد الحب - حقروص) ---
-        // البداية: 13.5 ثانية (بعيد الحب)
-        // النهاية: 58.0 ثانية (بعد مريت من جنبي فوراً)
-        const startSec = 13.5; 
+        const startSec = 13.0; 
         const endSec = 58.0; 
 
-        // --- الكلمات (شاملة المقطع كله) ---
         const lyrics = [
-            { time: 13.5, text: "بعيد الحب أبكتب لك .." },
-            { time: 16.5, text: "واسمعك الذي فاتك .." },
-            { time: 20.0, text: "وأتكلم وأشرح لك .." },
-            { time: 24.0, text: "حكاية عاشها قلبي .." },
-            { time: 28.0, text: "وانا صغير أناظر لك .." },
-            { time: 32.0, text: "وأتابع كل خطواتك .." },
-            { time: 36.0, text: "وانت تبتسم لي .." },
-            { time: 40.0, text: "ولا تدري مدى حبي .." },
-            { time: 44.0, text: "وكنت اتعمد النظرة .." },
-            { time: 48.0, text: "عشان احظى بنظراتك .." },
-            { time: 52.0, text: "واتشقق من الفرحة .." },
-            { time: 55.5, text: "اذا مريت من جنبيييي .." }
+            { time: 13.5, text: "بعيد الحب أبكتبلك و اسمعك" },
+            { time: 16.5, text: "الذي فاتك و أتكلم و أشرحلك" },
+            { time: 20.5, text: "حكاية عاشها قلبي و انا صغير" },
+            { time: 25.0, text: "اناظر لك و اتابع كل خطواتك" },
+            { time: 30.0, text: "و تنت تبتسم ليا ولا تدري" },
+            { time: 35.0, text: "ب مدي حبي" },
+            { time: 38.0, text: "و كنت اتعمد النظره عشان احظي" },
+            { time: 44.0, text: "بنظراتك واتشقق من الفرحه" },
+            { time: 50.0, text: "اذا مريت من جنبي" },
+            { time: 54.0, text: "واتشقق من الفرحه\nاذا مريت من جنبي" }
         ];
 
         var player;
@@ -201,8 +195,6 @@
         function checkTimeAndLyrics() {
             if (!player || !player.getCurrentTime) return;
             let ct = player.getCurrentTime();
-            
-            // Loop: يرجع للبداية عند الثانية 58
             if (ct >= endSec) player.seekTo(startSec);
 
             let currentText = "";
@@ -227,11 +219,9 @@
         function startExperience() {
             document.getElementById('startOverlay').style.opacity = '0';
             setTimeout(() => { document.getElementById('startOverlay').style.display = 'none'; }, 800);
-            
             const card = document.getElementById('mainCard'); 
             card.style.opacity = '1'; 
             card.style.transform = 'scale(1)';
-            
             if(player) { 
                 player.seekTo(startSec); 
                 player.playVideo(); 
@@ -240,7 +230,6 @@
             }
         }
 
-        // تاريخ البداية: 8 يناير 2025
         const startDate = new Date(2025, 0, 8).getTime(); 
         setInterval(() => {
             const now = new Date().getTime(); let diff = now - startDate;
