@@ -3,51 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Day</title>
+    <title>Happy Valentine's Day</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cairo:wght@600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root { --pure-red: #ff0000; --bg-black: #000000; --box-bg: #1a1a1a; }
+        :root { --pure-red: #ff0000; --glow-red: rgba(255, 0, 0, 0.6); --bg-black: #000000; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-black); color: white; font-family: 'Tajawal', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* شاشة البداية */
         #startOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.8s ease; }
-        .start-heart-container { position: relative; width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; animation: beat 1.5s infinite; }
+        .start-heart-container { position: relative; width: 120px; height: 120px; animation: beat 1.5s infinite; }
         .svg-heart { fill: var(--pure-red); width: 100%; height: 100%; filter: drop-shadow(0 0 20px var(--pure-red)); }
-        .heart-inner { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: black; line-height: 1; }
+        .heart-inner { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); color: black; line-height: 1; text-align: center; }
         .infinity-symbol { font-size: 3rem; font-weight: bold; }
         .rorty-text { font-size: 1rem; font-weight: 800; }
-        .phrase-msg { color: #fff; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 10px var(--pure-red); margin-top: 20px; }
-        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        /* الكارت الرئيسي - مخفي تماماً في البداية */
-        .main-card { width: 95%; max-width: 400px; text-align: center; display: none; opacity: 0; transform: scale(0.95); transition: all 1s ease; }
-        .main-heart-wrapper { position: relative; margin-bottom: 10px; cursor: pointer; animation: beat 2s infinite ease-in-out; display: inline-block; }
-        .main-heart { font-size: 7.5rem; color: var(--pure-red); filter: drop-shadow(0 0 45px var(--pure-red)); line-height: 1; display: block; }
-        /* حرف R في النص بالظبط */
+        .main-card { width: 95%; max-width: 400px; text-align: center; opacity: 0; transform: scale(0.95); transition: all 1s ease; }
+        .main-heart-wrapper { position: relative; margin-bottom: 10px; animation: beat 2s infinite ease-in-out; display: inline-block; }
+        .main-heart { font-size: 7.5rem; color: var(--pure-red); filter: drop-shadow(0 0 45px var(--pure-red)); line-height: 1; }
         .heart-letter-r { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -75%); color: black; font-size: 3rem; font-weight: 900; font-family: 'Cairo', sans-serif; }
         
         .title { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--pure-red); margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
-        .lyrics-box { min-height: 120px; display: flex; align-items: center; justify-content: center; }
-        .current-lyric { font-size: 1.3rem; color: var(--pure-red); font-weight: 700; text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); transition: all 0.4s ease; opacity: 0; transform: translateY(15px); }
+
+        /* منطقة القلوب والكلام */
+        .lyrics-box { min-height: 120px; position: relative; display: flex; align-items: center; justify-content: center; overflow: visible; }
+        .current-lyric { font-size: 1.3rem; color: var(--pure-red); font-weight: 700; text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); transition: all 0.4s ease; opacity: 0; transform: translateY(15px); white-space: pre-line; z-index: 2; }
         .current-lyric.visible { opacity: 1; transform: translateY(0); }
-        
+
+        /* انيميشن القلوب المتطايرة */
+        .floating-heart { position: absolute; color: var(--pure-red); font-size: 20px; pointer-events: none; animation: fly 3s linear forwards; opacity: 0.8; }
+        @keyframes fly { 
+            0% { transform: translate(0, 0) scale(1); opacity: 0.8; } 
+            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; } 
+        }
+
         .timer-container { display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-top: 20px; direction: ltr; }
-        .time-box { background: var(--box-bg); padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
+        .time-box { background: #1a1a1a; padding: 15px 5px; border-radius: 15px; flex: 1; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; }
         .t-num { font-size: 1.6rem; font-weight: 800; color: var(--pure-red); }
         .t-label { font-size: 0.75rem; color: #ccc; }
-        
+
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div id="startOverlay" onclick="handleStart()">
+    <div id="startOverlay" onclick="startExperience()">
         <div class="start-heart-container">
             <svg class="svg-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             <div class="heart-inner"><span class="infinity-symbol">∞</span><span class="rorty-text">RORTY</span></div>
         </div>
-        <div class="phrase-msg" id="loadingText">المُحب دائمـاً .. يجـد طـريقـاً</div>
+        <p style="margin-top:20px; color:#ccc;">المُحب دائمـاً .. يجـد طـريقـاً</p>
     </div>
 
     <div id="youtube-player"></div>
@@ -58,7 +63,11 @@
             <div class="heart-letter-r">R</div>
         </div>
         <div class="title">Happy Valentine's Day<br>My Sweetie</div>
-        <div class="lyrics-box"><div id="lyricText" class="current-lyric"></div></div>
+
+        <div class="lyrics-box" id="lyricsContainer">
+            <div id="lyricText" class="current-lyric"></div>
+        </div>
+
         <div class="timer-container">
             <div class="time-box"><span id="d" class="t-num">0</span><span class="t-label">يوم</span></div>
             <div class="time-box"><span id="h" class="t-num">0</span><span class="t-label">ساعة</span></div>
@@ -69,8 +78,9 @@
 
     <script>
         const videoId = 'pXava1lGms4';
-        const startPoint = 13.5;
-        const endPoint = 58.0;
+        const startSec = 0; // تبدأ من الصفر
+        const songStart = 13.5; // بداية الكلمات
+        const endSec = 58.0; 
 
         const lyrics = [
             { time: 13.5, text: "بعيد الحب أبكتبلك و اسمعك" },
@@ -86,6 +96,7 @@
         ];
 
         var player;
+        var heartInterval;
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
@@ -93,71 +104,66 @@
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
                 videoId: videoId,
-                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1, 'start': 13 },
+                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
                 events: { 'onStateChange': onPlayerStateChange }
             });
         }
 
+        function createHeart() {
+            const container = document.getElementById('lyricsContainer');
+            const heart = document.createElement('div');
+            heart.innerHTML = '♥️';
+            heart.className = 'floating-heart';
+            heart.style.setProperty('--x', (Math.random() * 200 - 100) + 'px');
+            heart.style.setProperty('--y', (Math.random() * -150 - 50) + 'px');
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.PLAYING) {
-                requestAnimationFrame(syncUI);
+                requestAnimationFrame(updateLoop);
             }
         }
 
-        function handleStart() {
-            if (!player) return;
-            document.getElementById('loadingText').innerText = "جاري التحضير...";
-            
-            player.mute();
-            player.playVideo();
-
-            // "الضربة القاضية": بيفضل يحاول يقفز للثانية المطلوبة لحد ما ينجح
-            let forceSeek = setInterval(() => {
-                player.seekTo(startPoint);
-                let currentTime = player.getCurrentTime();
-                
-                if (currentTime >= startPoint - 0.5 && currentTime <= startPoint + 1) {
-                    clearInterval(forceSeek);
-                    showContent();
-                }
-            }, 100);
-        }
-
-        function showContent() {
-            player.unMute();
-            player.setVolume(100);
-            document.getElementById('startOverlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('startOverlay').style.display = 'none';
-                const card = document.getElementById('mainCard');
-                card.style.display = 'block';
-                setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 50);
-            }, 800);
-        }
-
-        function syncUI() {
-            if (player.getPlayerState() !== YT.PlayerState.PLAYING) return;
+        function updateLoop() {
+            if (!player || player.getPlayerState() !== YT.PlayerState.PLAYING) return;
             let ct = player.getCurrentTime();
 
-            if (ct >= endPoint) player.seekTo(startPoint);
+            if (ct >= endSec) player.seekTo(0);
 
+            // إدارة القلوب والكلام
+            if (ct < songStart) {
+                if (!heartInterval) heartInterval = setInterval(createHeart, 300);
+                document.getElementById('lyricText').classList.remove('visible');
+            } else {
+                clearInterval(heartInterval);
+                heartInterval = null;
+                showLyrics(ct);
+            }
+            requestAnimationFrame(updateLoop);
+        }
+
+        function showLyrics(ct) {
             let currentText = "";
             for (let i = 0; i < lyrics.length; i++) {
                 if (ct >= lyrics[i].time && (i === lyrics.length - 1 || ct < lyrics[i+1].time)) {
-                    currentText = lyrics[i].text;
-                    break;
+                    currentText = lyrics[i].text; break;
                 }
             }
-
             const lyricDiv = document.getElementById('lyricText');
             if (lyricDiv.innerText !== currentText && currentText !== "") {
                 lyricDiv.classList.remove('visible');
-                setTimeout(() => { 
-                    lyricDiv.innerText = currentText; 
-                    lyricDiv.classList.add('visible'); 
-                }, 100);
+                setTimeout(() => { lyricDiv.innerText = currentText; lyricDiv.classList.add('visible'); }, 100);
             }
-            requestAnimationFrame(syncUI);
+        }
+
+        function startExperience() {
+            document.getElementById('startOverlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('startOverlay').style.display = 'none'; }, 800);
+            document.getElementById('mainCard').style.opacity = '1'; 
+            document.getElementById('mainCard').style.transform = 'scale(1)';
+            if(player) { player.playVideo(); player.unMute(); player.setVolume(100); }
         }
 
         // العداد من 8 يناير 2025
